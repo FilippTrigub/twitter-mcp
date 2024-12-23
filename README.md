@@ -1,5 +1,7 @@
 # Twitter MCP Server
 
+[![smithery badge](https://smithery.ai/badge/@enescinar/twitter-mcp)](https://smithery.ai/server/@enescinar/twitter-mcp)
+
 This MCP server allows Clients to interact with Twitter, enabling posting tweets and searching Twitter.
 
 ## Quick Start
