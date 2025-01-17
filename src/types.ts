@@ -84,3 +84,19 @@ export interface SearchResponse {
     count: number;
     tweets: FormattedTweet[];
 }
+
+// thread posting
+export const PostThreadSchema = z.object({
+    tweets: z.array(z.string()
+        .min(1, 'Tweet text cannot be empty')
+        .max(280, 'Tweet cannot exceed 280 characters')
+    ).min(1, 'Thread must contain at least one tweet')
+});
+
+export type PostThreadArgs = z.infer<typeof PostThreadSchema>;
+
+// thread
+export interface PostedThread {
+    tweets: PostedTweet[];
+    threadUrl: string;
+}
