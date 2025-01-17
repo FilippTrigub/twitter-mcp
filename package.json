@@ -1,6 +1,6 @@
 {
   "name": "@filipptrigub/twitter-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A Model Context Protocol server allows to interact with Twitter, enabling posting tweets and threads and searching Twitter.",
   "type": "module",
   "main": "build/index.js",
