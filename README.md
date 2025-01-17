@@ -1,6 +1,6 @@
 # Twitter MCP Server
 
-[![smithery badge](https://smithery.ai/badge/@enescinar/twitter-mcp)](https://smithery.ai/server/@enescinar/twitter-mcp)
+[![smithery badge](https://smithery.ai/badge/@filipptrigub/twitter-mcp)](https://smithery.ai/server/@filipptrigub/twitter-mcp)
 
 This MCP server allows Clients to interact with Twitter, enabling posting tweets and searching Twitter.
 
@@ -18,7 +18,7 @@ This MCP server allows Clients to interact with Twitter, enabling posting tweets
   "mcpServers": {
     "twitter-mcp": {
       "command": "npx",
-      "args": ["-y", "@enescinar/twitter-mcp"],
+      "args": ["-y", "@filipptrigub/twitter-mcp"],
       "env": {
         "API_KEY": "your_api_key_here",
         "API_SECRET_KEY": "your_api_secret_key_here",
@@ -35,6 +35,7 @@ This MCP server allows Clients to interact with Twitter, enabling posting tweets
 That's it! Claude can now interact with Twitter through two tools:
 
 - `post_tweet`: Post a new tweet
+- `post_thread`: Post a new tweet thread
 - `search_tweets`: Search for tweets
 
 ## Example Usage
@@ -56,7 +57,7 @@ If you want to contribute or run from source:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/EnesCinr/twitter-mcp.git
+git clone https://github.com/FilippTrigub/twitter-mcp.git
 cd twitter-mcp
 ```
 

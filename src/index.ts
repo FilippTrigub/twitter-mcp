@@ -12,7 +12,7 @@ import {
 import { TwitterClient } from './twitter-api.js';
 import { ResponseFormatter } from './formatter.js';
 import {
-  Config, ConfigSchema,
+  Config, ConfigSchema, PostThreadSchema,
   PostTweetSchema, SearchTweetsSchema,
   TwitterError
 } from './types.js';
@@ -97,7 +97,26 @@ export class TwitterServer {
             },
             required: ['query', 'count']
           }
-        } as Tool
+        } as Tool,
+        {
+          name: 'post_thread',
+          description: 'Post a thread of tweets to Twitter',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              tweets: {
+                type: 'array',
+                items: {
+                  type: 'string',
+                  description: 'The content of each tweet',
+                  maxLength: 280
+                },
+                description: 'Array of tweet contents for the thread'
+              }
+            },
+            required: ['tweets']
+          }
+        } as Tool,
       ]
     }));
 
@@ -112,6 +131,8 @@ export class TwitterServer {
             return await this.handlePostTweet(args);
           case 'search_tweets':
             return await this.handleSearchTweets(args);
+          case 'post_thread':
+            return await this.handlePostThread(args);
           default:
             throw new McpError(
               ErrorCode.MethodNotFound,
@@ -166,6 +187,24 @@ export class TwitterServer {
       content: [{
         type: 'text',
         text: ResponseFormatter.toMcpResponse(formattedResponse)
+      }] as TextContent[]
+    };
+  }
+
+  private async handlePostThread(args: unknown) {
+    const result = PostThreadSchema.safeParse(args);
+    if (!result.success) {
+      throw new McpError(
+          ErrorCode.InvalidParams,
+          `Invalid parameters: ${result.error.message}`
+      );
+    }
+
+    const thread = await this.client.postThread(result.data.tweets);
+    return {
+      content: [{
+        type: 'text',
+        text: ResponseFormatter.formatThreadResponse(thread)
       }] as TextContent[]
     };
   }

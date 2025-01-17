@@ -1,4 +1,4 @@
-import { FormattedTweet, Tweet, TwitterUser, SearchResponse } from './types.js';
+import {FormattedTweet, Tweet, TwitterUser, SearchResponse, PostedThread} from './types.js';
 
 export class ResponseFormatter {
   static formatTweet(tweet: Tweet, user: TwitterUser, position: number): FormattedTweet {
@@ -34,6 +34,24 @@ export class ResponseFormatter {
       count: formattedTweets.length,
       tweets: formattedTweets
     };
+  }
+
+  static formatThreadResponse(thread: PostedThread): string {
+    const header = [
+      'TWITTER THREAD POSTED',
+      `Successfully posted ${thread.tweets.length} tweets`,
+      `Thread URL: ${thread.threadUrl}`,
+      '='
+    ].join('\n');
+
+    const tweetBlocks = thread.tweets.map((tweet, index) => [
+      `Tweet #${index + 1}`,
+      `Content: ${tweet.text}`,
+      `ID: ${tweet.id}`,
+      '='
+    ].join('\n'));
+
+    return [header, ...tweetBlocks].join('\n\n');
   }
 
   static toMcpResponse(response: SearchResponse): string {

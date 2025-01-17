@@ -1,5 +1,5 @@
 import { TwitterApi } from 'twitter-api-v2';
-import { Config, TwitterError, Tweet, TwitterUser, PostedTweet } from './types.js';
+import {Config, TwitterError, Tweet, TwitterUser, PostedTweet, PostedThread} from './types.js';
 
 export class TwitterClient {
   private client: TwitterApi;
@@ -74,6 +74,53 @@ export class TwitterClient {
     }
   }
 
+  async postThread(tweets: string[]): Promise<PostedThread> {
+    try {
+      const endpoint = 'tweets/create';
+      await this.checkRateLimit(endpoint);
+
+      let previousTweetId: string | undefined;
+      const postedTweets: PostedTweet[] = [];
+
+      for (const tweetText of tweets) {
+        const tweetData = previousTweetId
+            ? {
+              text: tweetText,
+              reply: {
+                in_reply_to_tweet_id: previousTweetId
+              }
+            }
+            : { text: tweetText };
+
+        const response = await this.client.v2.tweet(tweetData);
+
+        const postedTweet = {
+          id: response.data.id,
+          text: response.data.text
+        };
+
+        postedTweets.push(postedTweet);
+        previousTweetId = response.data.id;
+
+        // Add small delay to prevent rate limiting
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+
+      // Get thread URL from the first tweet
+      const threadUrl = `https://twitter.com/status/${postedTweets[0].id}`;
+
+      console.error(`Thread posted successfully with ${postedTweets.length} tweets`);
+
+      return {
+        tweets: postedTweets,
+        threadUrl
+      };
+    } catch (error) {
+      this.handleApiError(error);
+    }
+  }
+
+
   private async checkRateLimit(endpoint: string): Promise<void> {
     const lastRequest = this.rateLimitMap.get(endpoint);
     if (lastRequest) {
@@ -113,3 +160,4 @@ export class TwitterClient {
     );
   }
 }
+
