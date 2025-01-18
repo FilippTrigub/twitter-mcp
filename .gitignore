@@ -1,5 +1,6 @@
 node_modules/
 build/
+post_history/
 *.log
 .env*
 .vscode/
